@@ -49,6 +49,18 @@ class ParseScheduleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_schedule("31.02.2026.xlsx", make_schedule())
 
+    def test_accepts_two_digit_years_in_filenames(self) -> None:
+        for file_name, expected in (
+            ("10.10.26.xlsx", date(2026, 10, 10)),
+            ("09.10.26.xlsx", date(2026, 10, 9)),
+        ):
+            with self.subTest(file_name=file_name):
+                lessons = parse_schedule(file_name, make_schedule())
+                self.assertTrue(lessons)
+                self.assertTrue(
+                    all(lesson.lesson_date == expected for lesson in lessons)
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

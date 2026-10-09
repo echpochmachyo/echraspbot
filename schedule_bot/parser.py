@@ -9,7 +9,7 @@ from typing import Any
 
 from openpyxl import load_workbook
 
-DATE_IN_NAME = re.compile(r"(?<!\d)(\d{1,2})[._-](\d{1,2})[._-](\d{4})(?!\d)")
+DATE_IN_NAME = re.compile(r"(?<!\d)(\d{1,2})[._-](\d{1,2})[._-](\d{2}|\d{4})(?!\d)")
 PAIR_IN_SHEET = re.compile(r"^\s*Пара\s*(\d+)", re.IGNORECASE)
 IGNORED_CELLS = {"ремонт", "свободно"}
 
@@ -49,6 +49,8 @@ def _schedule_date(file_name: str) -> date:
     if match is None:
         raise ValueError(f"Schedule filename has no date: {file_name}")
     day, month, year = (int(part) for part in match.groups())
+    if year < 100:
+        year += 2000
     return date(year, month, day)
 
 
